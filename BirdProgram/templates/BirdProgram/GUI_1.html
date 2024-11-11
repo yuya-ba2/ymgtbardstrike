@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+        <title>Bird_Program</title>
+        <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'>
+        <style>
+            body {
+                padding-top: 70px;
+            }
+            body {
+                text-align: center;
+            }
+            .large-text {
+                font-size: 2.3em;
+                color: black;
+            }
+            .large-text2 {
+                font-size: 1.8em;
+                color: red;
+            }
+            .spacer {
+                margin: 20px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="{% url 'BirdProgram:GUI_start' %}">Bird-Program</a>
+        </nav>
+
+        <div class="large-text">{{message1}}</div>
+        <div class="large-text">{{message2}}</div>
+        <div class="spacer"></div>
+        <div class="large-text2">{{message3}}</div>
+        <div class="large-text2">{{message4}}</div>
+        <div class="large-text2">{{message5}}</div>
+        <div class="large-text2">{{message6}}</div>
+        <div class="spacer"></div>
+        <div class="large-text">{{message7}}</div>
+        <div class="spacer"></div>
+
+        <form method="post" enctype="multipart/form-data" >
+            {% csrf_token %}        
+            {{ form }}    
+            <label for="file">ファイルを送信:</label>
+            <input type="file" id="file" name="file" webkitdirectory multiple accept="image/*">
+            <button type="submit">入力</button>
+        </form> 
+    </body>
+</html>

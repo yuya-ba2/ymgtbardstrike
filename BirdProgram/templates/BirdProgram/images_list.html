@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+        <title>Bird_Program</title>
+        <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'>
+        <style>
+            body {
+                padding-top: 70px;
+            }
+            body {
+                text-align: center;
+            }
+            .image-grid{
+                display: grid;
+                grid-template-columns: repeat(8, 1fr);
+                gap: 10px;
+            }
+            .spacer {
+                margin: 20px 0;
+            }
+            .selected {
+                border: 5px solid red;
+            }
+        </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const images = document.querySelectorAll('.thumbnail');
+                const selectedImages = [];
+
+                images.forEach(img => {
+                    img.addEventListener('click', function() {
+                        img.classList.toggle('highlight');
+                        const imgSrc = img.getAttribute('src');
+                        if (img.classList.contains('highlight')) {
+                            selectedImages.push(imgSrc);
+                        } else {
+                            const index = selectedImages.indexOf(imgSrc);
+                            if (index > -1) {
+                                selectedImages.splice(index, 1);
+                            }
+                        }  
+                    });
+                });
+
+                document.getElementById('okButton').addEventListener('click', function() {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{% url "BirdProgram:bird_ok" %}'; 
+
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = 'csrfmiddlewaretoken';
+                    csrfInput.value = '{{ csrf_token }}';
+                    form.appendChild(csrfInput);
+
+                    selectedImages.forEach(src => {
+                        const imgInput = document.createElement('input');
+                        imgInput.type = 'hidden';
+                        imgInput.name = 'images';
+                        imgInput.value = src;
+                        form.appendChild(imgInput);
+                    });
+
+                    document.body.appendChild(form);
+                    form.submit(); 
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand">Bird-Program</a>
+        </nav>
+        <div class="image-container">
+            {% for img_data in image_data %}
+                <img src="{{ img_data }}" alt="Thumbnail" style="max-width: 145px; margin: 3px;" onclick="toggleSelect(this)">
+            {% endfor %}
+        </div>
+            <div class="spacer"></div>
+            <a id="okButton" class='btn btn-outline-primary'>確認終了</a>
+        </form>
+
+        <div class="pagination">
+            <span class="step_links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; 最初</a>
+                    <a href="?page={{ page_obj.previous_page_number }}"> 前へ</a>
+                {% endif %}
+
+                <span class="current">
+                    ページ {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">次へ</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">最後 &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </body>
+</html>

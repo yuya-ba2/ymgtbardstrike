@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+        <title>Bird_Program</title>
+        <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'>
+        <style>
+            body {
+                padding-top: 70px;
+            }
+            body {
+                text-align: center;
+            }
+            .image-grid{
+                display: grid;
+                grid-template-columns: repeat(8, 1fr);
+                gap: 10px;
+            }
+            .spacer {
+                margin: 20px 0;
+            }
+            .selected {
+                border: 5px solid red;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand">Bird-Program</a>
+        </nav>
+        <form method="POST" action='{% url "BirdProgram:bird_ok" %}'  id="imageForm">
+            {% csrf_token %}
+            <div class="image-grid">
+                {% for img_data in image_data %}
+                    <img src="{{ img_data }}" alt="Thumbnail" style="max-width: 145px; margin: 3px;" onclick="toggleSelect(this)">
+                {% endfor %}
+            </div>
+            <div class="spacer"></div>
+            <a type="submit" id="saveButton" href='{% url "BirdProgram:bird_ok" %}' class='btn btn-outline-primary'>確認終了</a>
+        </form>
+
+        <div class="pagination">
+            <span class="step_links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; 最初</a>
+                    <a href="?page={{ page_obj.previous_page_number }}"> 前へ</a>
+                {% endif %}
+
+                <span class="current">
+                    ページ {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">次へ</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">最後 &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        <script>
+            function toggleSelect(img){
+                img.classList.toggle('selected');
+            }
+        </script>
+    </body>
+</html>
